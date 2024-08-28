@@ -1,100 +1,96 @@
 ![Logo](https://media.licdn.com/dms/image/v2/C4E1BAQGorTTcdBpzbg/company-background_10000/company-background_10000/0/1624981679246/oblek_company_cover?e=2147483647&v=beta&t=jESdkfCgLdymZj4KUdeqydqj1ZTctI8T4yrNzU6JMaY)
 
-# Project Title
+# 💾 Social Media Exporter
 
-Project Description
+Este proyecto es un exportador XLSX de información de redes sociales.
 
-## Tech Stack
+## Stack Tecnológico y Dependencias
 
-**Client:** React, Redux, TailwindCSS
+**Server:** Node, Express, TypeScript, Nodemailer, MySQL2, DotEnv, ExcelJS
 
-**Server:** Node, Express
+## Variables de Entorno
 
-## Installation
+Para ejecutar este proyecto, deberá agregar las siguientes variables de entorno a su archivo .env
 
-Install my-project with npm
+`DB_HOST`
 
-```bash
-  npm install my-project
-  cd my-project
-```
+`DB_PORT`
 
-## Environment Variables
+`DB_USER`
 
-To run this project, you will need to add the following environment variables to your .env file
+`DB_PASSWORD`
 
-`API_KEY`
+`DB_NAME`
 
-`ANOTHER_API_KEY`
+`PORT`
 
-## Run Locally
+`SECRET`
 
-Clone the project
+`NODEMAILER_USER`
 
-```bash
-  git clone https://link-to-project
-```
+`NODEMAILER_PASS`
 
-Go to the project directory
+`CORS_ORIGIN`
 
-```bash
-  cd my-project
-```
+## Ejecución en Local
 
-Install dependencies
+Clonación del proyecto
 
 ```bash
-  npm install
+git clone git@github.com:Oblekco/social-media-export-back.git  
 ```
-
-Start the server
 
 ```bash
-  npm run start
+cd social-media-export-back
 ```
 
-## API Reference
+Instalar dependencias
 
-#### Get all items
+```bash
+npm install
+```
+
+Ejecutar servidor
+
+```bash
+npm run dev
+```
+
+## API's
+
+#### Logín (Inicio de sesión)
 
 ```http
-  GET /api/items
+  POST /auth/login
 ```
 
-| Parameter | Type     | Description                |
-|:--------- |:-------- |:-------------------------- |
-| `api_key` | `string` | **Required**. Your API key |
+| Body Property | Type     | Description                          |
+|:------------- |:-------- |:------------------------------------ |
+| `email`       | `string` | **Requerido**. Email de usuario      |
+| `password`    | `email`  | **Requerido**. Contraseña de usuario |
 
-#### Get item
+###### Respuesta <mark>200 OK</mark>
 
-```http
-  GET /api/items/${id}
+```json
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzI0ODc1MTU2fQ.QgLxkb8f7FMSH2ZDbiQQ7ifwsYDi2TTJREy4lSTE9I8"
+}
 ```
 
-| Parameter | Type     | Description                       |
-|:--------- |:-------- |:--------------------------------- |
-| `id`      | `string` | **Required**. Id of item to fetch |
+###### Respuesta <mark>401 Unauthorized</mark>
 
-#### add(num1, num2)
+```json
+{
+    "message": "Credenciales incorrectas"
+}
+```
 
-Takes two numbers and returns the sum.
+## Proyecto Relacionado
 
-## Related
+Este proyecto es el backend de la aplicacion **Social Media Exporter** para correr la aplicacion completa en local podes dirigirte al frontend en el siguiente enlace
 
-Here are some related projects
+[**Ir al Front**](https://github.com/Oblekco/social-media-export-front)
 
-[Awesome README](https://github.com/matiassingers/awesome-readme)
+## Soporte
 
-## FAQ
-
-#### Question 1
-
-Answer 1
-
-#### Question 2
-
-Answer 2
-
-## Support
-
-For support, email fake@fake.com or join our Slack channel.
+Ante cualquier consulta podes enviar un email a [juanignacio.sterren@intelicast.net]() o buscame en [**Slack**]([Slack](https://intelitegrupo.slack.com/archives/D07GZ9EBN04)).
