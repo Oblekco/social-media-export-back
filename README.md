@@ -93,4 +93,4 @@ Este proyecto es el backend de la aplicacion **Social Media Exporter** para corr
 
 ## Soporte
 
-Ante cualquier consulta podes enviar un email a [juanignacio.sterren@intelicast.net]() o buscame en [**Slack**]([Slack](https://intelitegrupo.slack.com/archives/D07GZ9EBN04)).
+Ante cualquier consulta podes enviar un email a *juanignacio.sterren@intelicast.net*.
