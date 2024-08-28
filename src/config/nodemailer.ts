@@ -1,7 +1,7 @@
-import nodemailer, { TransportOptions } from 'nodemailer';
-import dotenv from 'dotenv';
+import nodemailer, { TransportOptions } from 'nodemailer'
+import dotenv from 'dotenv'
 
-dotenv.config();
+dotenv.config()
 
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -14,14 +14,14 @@ const transporter = nodemailer.createTransport({
 
     socketTimeout: 30000,
     connectionTimeout: 30000,
-} as TransportOptions);
+} as TransportOptions)
 
 transporter.verify((error, success) => {
     if (error) {
-        console.error('Error configuring transporter:', error);
+        console.error('Error configuring transporter:', error)
     } else {
-        console.log('Transporter is ready to send emails');
+        console.log('Transporter is ready to send emails')
     }
-});
+})
 
-export default transporter;
+export default transporter

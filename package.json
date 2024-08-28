@@ -4,8 +4,9 @@
   "description": "This project is an exporter of .xlsx files",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --watch 'src/**/*.ts' --exec npx ts-node src/server.ts"
+    "start": "ts-node src/index.ts",
+    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/server.ts",
+    "format": "prettier --write 'src/**/*.{js,ts,json,md}'"
   },
   "author": "Juan Ignacio Sterren",
   "license": "ISC",
@@ -26,6 +27,7 @@
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/nodemailer": "^6.4.15",
-    "nodemon": "^3.1.4"
+    "nodemon": "^3.1.4",
+    "prettier": "^3.3.3"
   }
 }

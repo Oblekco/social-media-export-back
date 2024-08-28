@@ -1,9 +1,9 @@
 export interface Topic {
-    textClave: string;
-    texNombre: string;
+    textClave: string
+    texNombre: string
 }
 
 export interface SubTopic {
-    queclave: string;
-    quenombre: string;
+    queclave: string
+    quenombre: string
 }

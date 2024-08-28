@@ -1,10 +1,10 @@
-import express from "express";
+import express from 'express'
 
-const router = express.Router();
+const router = express.Router()
 
-import { authenticateToken } from "../middlewares/authenticateToken";
-import { exportSocialData } from "../controllers/exportSocialDataController";
+import { authenticateToken } from '../middlewares/authenticateToken'
+import { exportSocialData } from '../controllers/exportSocialDataController'
 
-router.get("/export/mysql-to-xlsx", authenticateToken, exportSocialData);
+router.get('/export/mysql-to-xlsx', authenticateToken, exportSocialData)
 
-export default router;
+export default router
