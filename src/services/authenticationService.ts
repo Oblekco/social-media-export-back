@@ -76,8 +76,8 @@ export const findUserById = async (id: DecodedToken): Promise<User | null> => {
     try {
         const connection = await dbProdConnection()
         const [rows] = await connection.query(
-            'SELECT id, username, email, rol FROM SOCIAL_MEDIA_USERS WHERE id = ? LIMIT 1',
-            [id.id],
+            'SELECT id, username, email FROM SOCIAL_MEDIA_USERS WHERE id = ? LIMIT 1',
+            [id.id]
         )
 
         if (Array.isArray(rows) && rows.length > 0) {
