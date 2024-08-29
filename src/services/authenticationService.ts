@@ -4,7 +4,6 @@ import { DecodedToken, User, UserToken } from '../interfaces/user'
 
 export const authenticateUser = async (email: string, password: string): Promise<UserToken | null> => {
     try {
-
         const connection = await dbProdConnection()
         const [rows] = await connection.query(
             'SELECT id FROM SOCIAL_MEDIA_USERS WHERE email = ? AND password = ? LIMIT 1',
