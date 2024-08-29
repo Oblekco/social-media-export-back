@@ -22,7 +22,7 @@ async function sendEmailWithAttachment(
     email: string,
     id_user: { id: number },
     topic: string,
-    subTopic: string,
+    subTopic: string
 ): Promise<void> {
     const mailOptions = {
         from: process.env.NODEMAILER_USER,

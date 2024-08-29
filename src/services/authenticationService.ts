@@ -7,7 +7,7 @@ export const authenticateUser = async (email: string, password: string): Promise
         const connection = await dbProdConnection()
         const [rows] = await connection.query(
             'SELECT id FROM SOCIAL_MEDIA_USERS WHERE email = ? AND password = ? LIMIT 1',
-            [email, password],
+            [email, password]
         )
 
         if (Array.isArray(rows) && rows.length > 0) {
