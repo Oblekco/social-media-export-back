@@ -37,7 +37,7 @@ Para ejecutar este proyecto, deberá agregar las siguientes variables de entorno
 Clonación del proyecto
 
 ```bash
-git clone git@github.com:Oblekco/social-media-export-back.git  
+git clone git@github.com:Oblekco/social-media-export-back.git
 ```
 
 ```bash
@@ -61,13 +61,13 @@ npm run dev
 #### Logín (Inicio de sesión)
 
 ```http
-  POST /auth/login
+POST /auth/login
 ```
 
-| Body Property | Type     | Description                          |
-|:------------- |:-------- |:------------------------------------ |
-| `email`       | `string` | **Requerido**. Email de usuario      |
-| `password`    | `email`  | **Requerido**. Contraseña de usuario |
+| Propiedad de Cuerpo | Tipo     | Descripción                          |
+| ------------------- | -------- | ------------------------------------ |
+| `email`             | `string` | **Requerido**. Email de usuario      |
+| `password`          | `email`  | **Requerido**. Contraseña de usuario |
 
 ###### Respuesta <mark>200 OK</mark>
 
@@ -82,6 +82,92 @@ npm run dev
 ```json
 {
     "message": "Credenciales incorrectas"
+}
+```
+
+```json
+{
+    "message": "Credenciales incorrectas"
+}
+```
+
+###### Respuesta <mark>500 Internal Server Error</mark>
+
+```json
+{
+    "message": "Ocurrió un error al enviar el correo electrónico"
+}
+```
+
+#### Exporter (Exportación de datos)
+
+```http
+POST /social/export/xlsx
+```
+
+| Propiedad de Cuerpo | Tipo       | Descripción                                  |
+| ------------------- | ---------- | -------------------------------------------- |
+| `startDate`         | `String`   | **Requerido**. Fecha de inicio de busqueda   |
+| `endDate`           | `String`   | **Requerido**. Fecha de fin de busqueda      |
+| `words`             | `String[]` | **Requerido**. Palabras claves para busqueda |
+
+| Propiedad de Cabecera | Tipo           | Descripción                    |
+| --------------------- | -------------- | ------------------------------ |
+| `Authorization`       | `Bearer Token` | **Requerido**. Token de sesión |
+
+###### Respuesta <mark>200 OK</mark>
+
+```json
+{
+    "message": "Datos exportados correctamente"
+}
+```
+
+###### Respuesta <mark>401 Unauthorized</mark>
+
+```json
+{
+    "message": "Credenciales incorrectas"
+}
+```
+
+###### Respuesta <mark>400 Bad Request</mark>
+
+```json
+{
+    "message": "Se requiere una fecha de inicio y una fecha de fin"
+}
+```
+
+```json
+{
+    "message": "La fecha de inicio no puede ser mayor a la fecha de fin"
+}
+```
+
+```json
+{
+    "message": "Las palabras clave deben ser un arreglo"
+}
+```
+
+###### Respuesta <mark>500 Internal Server Error</mark>
+
+```json
+{
+    "message": "Ocurrió un error al enviar el correo electrónico"
+}
+```
+
+```json
+{
+    "message": "Ocurrió un error al procesar la solicitud"
+}
+```
+
+```json
+{
+    "message": "Error interno del servidor"
 }
 ```
 
