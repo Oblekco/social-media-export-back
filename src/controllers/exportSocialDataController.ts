@@ -81,7 +81,7 @@ export const exportSocialData = async (req: Request, res: Response) => {
         ]
 
         const socialData = formatData(mockData)
-
+        
         const fileName = await generateExcelFile(socialData)
 
         const sendEmailResponse = await sendEmail(userId, fileName)

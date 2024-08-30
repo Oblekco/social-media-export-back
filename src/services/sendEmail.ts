@@ -19,13 +19,15 @@ async function fetchUserEmailById(userId: number): Promise<UserEmailResult> {
 }
 
 async function sendEmailWithAttachment(email: string, fileName: string): Promise<boolean> {
+    
     const mailOptions = {
         from: process.env.NODEMAILER_USER,
         to: email,
-        subject: 'Excel',
+        subject: 'Social Media Exporter',
+        text: 'Adjunto se encuentra el archivo con la información solicitada desde Social Media Exporter.',
         attachments: [
             {
-                filename: 'social-media-exporter.xlsx',
+                filename: `${fileName.split('/')[1]}`,
                 path: `./${fileName}`,
                 cid: 'uniq-sme.xlsx',
             },
