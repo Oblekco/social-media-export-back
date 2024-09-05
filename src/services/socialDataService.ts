@@ -27,6 +27,30 @@ export const getSocialData = async (startDate: string, endDate: string, sqlQuery
     }
 }
 
+export const saveHistoryRecord = async (
+    userId: number,
+    search: string,
+    isBooleanSearch: boolean = true
+): Promise<void> => {
+    let connection
+
+    try {
+        connection = await dbConnection()
+
+        const query = `
+            INSERT INTO SOCIAL_MEDIA_SEARCH_HISTORY (user_id, search, is_boolean_search, date)
+            VALUES (?, ?, ?, ?)
+        `
+
+        const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' ')
+
+        await connection.execute(query, [userId, search, isBooleanSearch ? 1 : 0, currentDate])
+    } catch (error) {
+        console.error('Error al guardar el historial:', error)
+        throw new Error('Error al guardar el historial')
+    }
+}
+
 const formatData = (rows: RowDataPacket[]): QueryResult[] => {
     return rows.map((row) => ({
         date: row.DATE,

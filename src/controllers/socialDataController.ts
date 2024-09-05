@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 
-import { getSocialData } from '../services/socialDataService'
+import { getSocialData, saveHistoryRecord } from '../services/socialDataService'
 import { generateExcelFile } from '../services/excelService'
 import { SearchRequestBody } from '../interfaces/export'
 import { convertBooleanQueryToSQLQuery } from '../utils/queryConverter'
@@ -22,6 +22,8 @@ export const generateSocialDataFile = async (req: Request, res: Response) => {
             return res.status(400).json({ error: 'La query de busqueda es necesaria' })
         }
 
+        await saveHistoryRecord(userId, booleanQuery)
+
         // ? Pedir al front que utilice la función encodeURIComponent para escapar la query antes de enviarla
         const unescapedQuery = decodeURIComponent(booleanQuery)
 
@@ -31,9 +33,11 @@ export const generateSocialDataFile = async (req: Request, res: Response) => {
 
         const filePath = await generateExcelFile(socialData)
 
+        console.log('ARCHIVO GENERADO:', filePath)
+
         return res.status(200).json({
             socialData,
-            filePath
+            filePath,
         })
     } catch (error) {
         console.error('Error', error)

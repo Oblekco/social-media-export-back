@@ -19,7 +19,6 @@ async function fetchUserEmailById(userId: number): Promise<UserEmailResult> {
 }
 
 async function sendEmailWithAttachment(email: string, fileName: string): Promise<boolean> {
-    
     const mailOptions = {
         from: process.env.NODEMAILER_USER,
         to: email,
