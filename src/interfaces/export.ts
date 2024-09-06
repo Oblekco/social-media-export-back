@@ -26,3 +26,16 @@ export interface QueryResult {
     reactions: number
     threads: number
 }
+
+export interface SearchRequestBody {
+    dateEnd: string
+    dateStart: string
+    booleanQuery: string
+    allKeywords: string[]
+    allSearches: string[]
+    anyKeywords: string[]
+    anySearches: string[]
+    notKeywords: string[]
+    notSearches: string[]
+    searchQueryType: string
+}

@@ -1,30 +1,7 @@
 import { RowDataPacket } from 'mysql2'
-import dbConnection from '../config/mysql'
 import { QueryResult } from '../interfaces/export'
 
-export const getSocialData = async (startDate: string, endDate: string, words: string[]): Promise<QueryResult[]> => {
-    let connection
-
-    try {
-        connection = await dbConnection()
-
-        const query = `
-            SELECT *
-            FROM social_data
-            WHERE date BETWEEN ? AND ?
-            AND headline LIKE ?
-        `
-
-        const word = words.length > 0 ? words[0] : ''
-        const [rows, _fields] = await connection.execute<RowDataPacket[]>(query, [startDate, endDate, `%${word}%`])
-
-        return formatData(rows)
-    } catch (error) {
-        throw new Error('Error al obtener los datos')
-    }
-}
-
-const formatData = (rows: RowDataPacket[]): QueryResult[] => {
+export const formatSocialMediaData = (rows: RowDataPacket[]): QueryResult[] => {
     return rows.map((row) => ({
         date: row.DATE,
         headline: row.HEADLINE,

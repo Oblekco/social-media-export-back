@@ -1,7 +1,8 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import authRoutes from './routes/authRoutes'
-import socialDataRoutes from './routes/exportSocialDataRoutes'
+import socialDataRoutes from './routes/socialDataRoutes'
+import sendEmailRoutes from './routes/sendEmailRoutes'
 
 import { EventEmitter } from 'events'
 
@@ -25,7 +26,9 @@ app.use(express.json())
 
 app.use('/auth', authRoutes)
 
-app.use('/social', socialDataRoutes)
+app.use('/search', socialDataRoutes)
+
+app.use('/send', sendEmailRoutes)
 
 app.listen(process.env.PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${process.env.PORT}`)
