@@ -1,5 +1,4 @@
 import { Request, Response } from 'express'
-
 import { sendEmail } from '../services/sendEmail'
 
 export const sendSocialDataFile = async (req: Request, res: Response) => {

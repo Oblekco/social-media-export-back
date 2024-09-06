@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 
-import { getSocialData, saveHistoryRecord } from '../services/socialDataService'
+import { getSocialData, saveHistoryRecord, getSearchHistoryList } from '../services/socialDataService'
 import { generateExcelFile } from '../services/excelService'
 import { SearchRequestBody } from '../interfaces/export'
 import { convertBooleanQueryToSQLQuery } from '../utils/queryConverter'
@@ -24,16 +24,11 @@ export const generateSocialDataFile = async (req: Request, res: Response) => {
 
         await saveHistoryRecord(userId, booleanQuery)
 
-        // ? Pedir al front que utilice la función encodeURIComponent para escapar la query antes de enviarla
         const unescapedQuery = decodeURIComponent(booleanQuery)
-
         const sqlQuery = convertBooleanQueryToSQLQuery(unescapedQuery)
 
         const socialData = await getSocialData(dateStart, dateEnd, sqlQuery)
-
         const filePath = await generateExcelFile(socialData)
-
-        console.log('ARCHIVO GENERADO:', filePath)
 
         return res.status(200).json({
             socialData,
@@ -42,5 +37,28 @@ export const generateSocialDataFile = async (req: Request, res: Response) => {
     } catch (error) {
         console.error('Error', error)
         return res.status(500).json({ error: 'Ocurrió un error al procesar la solicitud.' })
+    }
+}
+
+export const listSearchHistory = async (req: Request, res: Response) => {
+    try {
+        const { id: userId } = req.user
+        const { page = '1', limit = '10', order = 'ASC', filter = [] } = req.query
+
+        const filterArray = Array.isArray(filter) ? filter : [filter]
+        const filterStrings = filterArray.map((f) => String(f))
+
+        const searchHistory = await getSearchHistoryList(
+            userId,
+            Number(page),
+            Number(limit),
+            String(order),
+            filterStrings
+        )
+
+        res.status(200).json(searchHistory)
+    } catch (error) {
+        console.error('Error en el controlador:', error)
+        res.status(500).json({ message: 'Error al obtener el historial de búsqueda' })
     }
 }

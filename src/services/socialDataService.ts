@@ -1,94 +1,9 @@
 import { RowDataPacket } from 'mysql2'
 import dbConnection from '../config/mysql'
 import { QueryResult } from '../interfaces/export'
+import { formatSocialMediaData } from '../utils/dataConverter'
 
-export const getSocialData = async (startDate: string, endDate: string, sqlQuery: string): Promise<QueryResult[]> => {
-    let connection
-
-    try {
-        connection = await dbConnection()
-
-        const query = `
-            SELECT QUECLAVE
-            FROM INTELITE_IQUERYXML
-            WHERE QUEFECHA BETWEEN ? AND ?
-            AND QUENOMBRE LIKE ?
-        `
-
-        const word = sqlQuery.length > 0 ? sqlQuery[0] : ''
-        const [rows, _fields] = await connection.execute<RowDataPacket[]>(query, [startDate, endDate, `%${word}%`])
-
-        console.log('DATOS OBTENIDOS DESDE LA DB:', rows)
-
-        return formatData(convertToRowDataPacket(mockData))
-    } catch (error) {
-        console.error('Error al obtener los datos:', error)
-        throw new Error('Error al obtener los datos')
-    }
-}
-
-export const saveHistoryRecord = async (
-    userId: number,
-    search: string,
-    isBooleanSearch: boolean = true
-): Promise<void> => {
-    let connection
-
-    try {
-        connection = await dbConnection()
-
-        const query = `
-            INSERT INTO SOCIAL_MEDIA_SEARCH_HISTORY (user_id, search, is_boolean_search, date)
-            VALUES (?, ?, ?, ?)
-        `
-
-        const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' ')
-
-        await connection.execute(query, [userId, search, isBooleanSearch ? 1 : 0, currentDate])
-    } catch (error) {
-        console.error('Error al guardar el historial:', error)
-        throw new Error('Error al guardar el historial')
-    }
-}
-
-const formatData = (rows: RowDataPacket[]): QueryResult[] => {
-    return rows.map((row) => ({
-        date: row.DATE,
-        headline: row.HEADLINE,
-        url: row.URL,
-        openingText: row['OPENING TEXT'],
-        hitSentence: row['HIT SENTENCE'],
-        source: row.SOURCE,
-        influencer: row.INFLUENCER,
-        country: row.COUNTRY,
-        reach: row.REACH,
-        engagement: row.ENGAGEMENT,
-        sentiment: row.SENTIMENT,
-        keyPhrases: row['KEY PHRASES'],
-        inputName: row['INPUT NAME'],
-        twitterScreenName: row['TWITTER SCREEN NAME'],
-        twitterFollowers: row['TWITTER FOLLOWERS'],
-        twitterFollowing: row['TWITTER FOLLOWING'],
-        state: row.STATE,
-        city: row.CITY,
-        views: row.VIEWS,
-        likes: row.LIKES,
-        replies: row.REPLIES,
-        retweets: row.RETWEETS,
-        comments: row.COMMENTS,
-        shares: row.SHARES,
-        reactions: row.REACTIONS,
-        threads: row.THREADS,
-    }))
-}
-
-const convertToRowDataPacket = (data: any[]): RowDataPacket[] => {
-    return data.map((item) => ({
-        constructor: { name: 'RowDataPacket' },
-        ...item,
-    }))
-}
-
+//! TEMPORAL: Se mockea respuesta de ejemplo hasta que se tenga acceso a los datos reales
 const mockData = [
     {
         DATE: '2023-10-01',
@@ -147,3 +62,94 @@ const mockData = [
         THREADS: 4,
     },
 ]
+
+// ! TEMPORAL: Se convierte el array de objetos a un array de RowDataPacket para simular la respuesta de la base de datos
+const convertToRowDataPacket = (data: any[]): RowDataPacket[] => {
+    return data.map((item) => ({
+        constructor: { name: 'RowDataPacket' },
+        ...item,
+    }))
+}
+
+export const getSocialData = async (startDate: string, endDate: string, sqlQuery: string): Promise<QueryResult[]> => {
+    let connection
+
+    try {
+        connection = await dbConnection()
+
+        const query = `
+            SELECT QUECLAVE
+            FROM INTELITE_IQUERYXML
+            WHERE QUEFECHA BETWEEN ? AND ?
+            AND QUENOMBRE LIKE ?
+        `
+
+        const word = sqlQuery.length > 0 ? sqlQuery[0] : ''
+        const [rows, _fields] = await connection.execute<RowDataPacket[]>(query, [startDate, endDate, `%${word}%`])
+
+        return formatSocialMediaData(convertToRowDataPacket(mockData))
+    } catch (error) {
+        console.error('Error al obtener los datos:', error)
+        throw new Error('Error al obtener los datos')
+    }
+}
+
+export const saveHistoryRecord = async (
+    userId: number,
+    search: string,
+    isBooleanSearch: boolean = true
+): Promise<void> => {
+    let connection
+
+    try {
+        connection = await dbConnection()
+
+        const query = `
+            INSERT INTO SOCIAL_MEDIA_SEARCH_HISTORY (user_id, search, is_boolean_search, date)
+            VALUES (?, ?, ?, ?)
+        `
+
+        const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' ')
+
+        await connection.execute(query, [userId, search, isBooleanSearch ? 1 : 0, currentDate])
+    } catch (error) {
+        console.error('Error al guardar el historial:', error)
+        throw new Error('Error al guardar el historial')
+    }
+}
+
+export const getSearchHistoryList = async (
+    userId: number,
+    page: number,
+    limit: number,
+    order: string,
+    filter: string[]
+): Promise<RowDataPacket[]> => {
+    let connection
+
+    try {
+        connection = await dbConnection()
+
+        const validOrder = order.toUpperCase() === 'ASC' || order.toUpperCase() === 'DESC' ? order.toUpperCase() : 'ASC'
+        const offset = (page - 1) * limit
+
+        const filterConditions = filter.map((term) => `search LIKE ?`).join(' AND ')
+        const filterValues = filter.map((term) => `%${term}%`)
+
+        const query = `
+            SELECT *
+            FROM SOCIAL_MEDIA_SEARCH_HISTORY
+            WHERE user_id = ?
+            ${filterConditions ? `AND ${filterConditions}` : ''}
+            ORDER BY date ${validOrder}
+            LIMIT ${limit} OFFSET ${offset}
+        `
+
+        const [rows, _fields] = await connection.execute<RowDataPacket[]>(query, [userId, ...filterValues])
+
+        return rows
+    } catch (error) {
+        console.error('Error al obtener el historial:', error)
+        throw new Error('Error al obtener el historial')
+    }
+}
