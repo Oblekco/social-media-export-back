@@ -56,9 +56,11 @@ Ejecutar servidor
 npm run dev
 ```
 
+-----
+
 ## API's
 
-#### Logín (Inicio de sesión)
+#### 🛡 Logín (Inicio de sesión)
 
 ```http
 POST /auth/login
@@ -99,17 +101,19 @@ POST /auth/login
 }
 ```
 
-#### Exporter (Exportación de datos)
+----
+
+#### 🔍 Search (Busqueda de datos)
 
 ```http
-POST /social/export/xlsx
+POST /search
 ```
 
-| Propiedad de Cuerpo | Tipo       | Descripción                                  |
-| ------------------- | ---------- | -------------------------------------------- |
-| `startDate`         | `String`   | **Requerido**. Fecha de inicio de busqueda   |
-| `endDate`           | `String`   | **Requerido**. Fecha de fin de busqueda      |
-| `words`             | `String[]` | **Requerido**. Palabras claves para busqueda |
+| Propiedad de Cuerpo | Tipo     | Descripción                                          |
+| ------------------- | -------- | ---------------------------------------------------- |
+| `dateStart`         | `String` | **Requerido**. Fecha de inicio de busqueda           |
+| `dateEnd`           | `String` | **Requerido**. Fecha de fin de busqueda              |
+| `booleanQuery`      | `String` | **Requerido**. Query booleana para realizar busqueda |
 
 | Propiedad de Cabecera | Tipo           | Descripción                    |
 | --------------------- | -------------- | ------------------------------ |
@@ -119,7 +123,65 @@ POST /social/export/xlsx
 
 ```json
 {
-    "message": "Datos exportados correctamente"
+    "socialData": [
+        {
+            "date": "2023-10-01",
+            "headline": "Sample Headline 1",
+            "url": "http://example.com/1",
+            "openingText": "This is the opening text for sample 1.",
+            "hitSentence": "This is a hit sentence for sample 1.",
+            "source": "Source 1",
+            "influencer": "Influencer 1",
+            "country": "Country 1",
+            "reach": 1000,
+            "engagement": 100,
+            "sentiment": "Positive",
+            "keyPhrases": "key1, key2",
+            "inputName": "Input 1",
+            "twitterScreenName": "@sample1",
+            "twitterFollowers": 500,
+            "twitterFollowing": 100,
+            "state": "State 1",
+            "city": "City 1",
+            "views": 200,
+            "likes": 50,
+            "replies": 10,
+            "retweets": 5,
+            "comments": 20,
+            "shares": 15,
+            "reactions": 30,
+            "threads": 2
+        },
+        {
+            "date": "2023-10-02",
+            "headline": "Sample Headline 2",
+            "url": "http://example.com/2",
+            "openingText": "This is the opening text for sample 2.",
+            "hitSentence": "This is a hit sentence for sample 2.",
+            "source": "Source 2",
+            "influencer": "Influencer 2",
+            "country": "Country 2",
+            "reach": 2000,
+            "engagement": 200,
+            "sentiment": "Neutral",
+            "keyPhrases": "key3, key4",
+            "inputName": "Input 2",
+            "twitterScreenName": "@sample2",
+            "twitterFollowers": 1000,
+            "twitterFollowing": 200,
+            "state": "State 2",
+            "city": "City 2",
+            "views": 400,
+            "likes": 100,
+            "replies": 20,
+            "retweets": 10,
+            "comments": 40,
+            "shares": 30,
+            "reactions": 60,
+            "threads": 4
+        }
+    ],
+    "filePath": "docs/smd-20240905152057.xlsx"
 }
 ```
 
@@ -135,19 +197,19 @@ POST /social/export/xlsx
 
 ```json
 {
-    "message": "Se requiere una fecha de inicio y una fecha de fin"
+    "message": "Se requiere una fecha de inicio y una fecha de fin."
 }
 ```
 
 ```json
 {
-    "message": "La fecha de inicio no puede ser mayor a la fecha de fin"
+    "message": "La fecha de inicio no puede ser mayor a la fecha de fin."
 }
 ```
 
 ```json
 {
-    "message": "Las palabras clave deben ser un arreglo"
+    "message": "La query de busqueda es necesaria."
 }
 ```
 
@@ -155,13 +217,7 @@ POST /social/export/xlsx
 
 ```json
 {
-    "message": "Ocurrió un error al enviar el correo electrónico"
-}
-```
-
-```json
-{
-    "message": "Ocurrió un error al procesar la solicitud"
+    "message": "Ocurrio un error al procesar la solicitud"
 }
 ```
 
@@ -170,6 +226,125 @@ POST /social/export/xlsx
     "message": "Error interno del servidor"
 }
 ```
+
+--------
+
+#### 📃 List Search (Listado de busquedas)
+
+```http
+GET /search
+```
+
+| Parametros (Query) | Tipo       | Descripción                                                                          |
+| ------------------ | ---------- | ------------------------------------------------------------------------------------ |
+| `page`             | `Number`   | **Opciona**. Numero de pagina                                                        |
+| `limit`            | `Number`   | **Opcional**. Cantidad de registros por pagina                                       |
+| `order`            | `String`   | **Opcional**. Orden de listado en relacion al campo `date`, puede ser *ASC* o *DESC* |
+| `filter`           | `String[]` | **Opcional.** Arreglo de palabras clave para busqueda. (AND)                         |
+
+| Propiedad de Cabecera | Tipo           | Descripción                    |
+| --------------------- | -------------- | ------------------------------ |
+| `Authorization`       | `Bearer Token` | **Requerido**. Token de sesión |
+
+###### Respuesta <mark>200 OK</mark>
+
+```json
+[
+    {
+        "id": 1,
+        "user_id": 2,
+        "date": "2024-09-06T00:07:20.000Z",
+        "search": "(((BBVARe_mx OR to:BBVARe_mx  OR from:BBVARe_mx OR BBVA_Mex OR to:BBVA_Mex OR from:BBVA_Mex OR BBVAPrensa_mx"))",
+        "is_boolean_search": 1
+    }
+]
+```
+
+###### Respuesta <mark>401 Unauthorized</mark>
+
+```json
+{
+    "message": "Credenciales incorrectas"
+}
+```
+
+###### Respuesta <mark>400 Bad Request</mark>
+
+```json
+{
+    "message": "Ocurrio un error al obtener el historial de búsqueda."
+}
+```
+
+###### Respuesta<mark> 500 Internal Server Erro</mark>r
+
+```json
+{
+    "message": "Error al obtener el historial"
+}
+```
+
+```json
+{
+    "message": "Error interno del servidor"
+}
+```
+
+---
+
+#### 📨 Send Email (Enviar email con archivo .xlsx adjunto)
+
+```http
+POST /send
+```
+
+| Propiedad de Cuerpo | Tipo     | Descripción                                                             |
+| ------------------- | -------- | ----------------------------------------------------------------------- |
+| `filePath`          | `String` | **Requerido**. FilePath donde se encuentra alojado el .xlsx previamente |
+
+| Propiedad de Cabecera | Tipo           | Descripción                    |
+| --------------------- | -------------- | ------------------------------ |
+| `Authorization`       | `Bearer Token` | **Requerido**. Token de sesión |
+
+###### Respuesta <mark>200 OK</mark>
+
+```json
+{
+    "message": "Datos enviados correctamente."
+}
+```
+
+###### Respuesta <mark>401 Unauthorized</mark>
+
+```json
+{
+    "message": "Credenciales incorrectas"
+}
+```
+
+###### Respuesta <mark>400 Bad Request</mark>
+
+```json
+{
+    "message": "Se requiere la ruta del archivo."
+}
+```
+
+###### Respuesta <mark>500 Internal Server Error</mark>
+
+```json
+{
+    "message": "Ocurrió un error al enviar el correo electrónico."
+}
+```
+
+```json
+{
+    "message": "Error interno del servidor."
+}
+```
+
+----
 
 ## Proyecto Relacionado
 

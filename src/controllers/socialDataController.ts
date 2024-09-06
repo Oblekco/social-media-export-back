@@ -19,7 +19,7 @@ export const generateSocialDataFile = async (req: Request, res: Response) => {
         }
 
         if (!booleanQuery.length) {
-            return res.status(400).json({ error: 'La query de busqueda es necesaria' })
+            return res.status(400).json({ error: 'La query de busqueda es necesaria.' })
         }
 
         await saveHistoryRecord(userId, booleanQuery)
