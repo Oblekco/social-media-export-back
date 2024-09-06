@@ -57,8 +57,7 @@ export async function sendEmail(userId: number, fileName: string): Promise<boole
     const { email } = await fetchUserEmailById(userId)
 
     if (!email) {
-        console.error('El correo electrónico del usuario no está disponible.')
-        return false
+        throw new Error('El usuario no tiene un correo electrónico asociado')
     }
 
     try {
@@ -67,6 +66,6 @@ export async function sendEmail(userId: number, fileName: string): Promise<boole
 
         return true
     } catch (error) {
-        throw new Error('Error al enviar el correo electrónico')
+        throw new Error('Ocurrió un error al enviar el correo electrónico')
     }
 }

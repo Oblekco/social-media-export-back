@@ -87,17 +87,17 @@ POST /auth/login
 }
 ```
 
-```json
-{
-    "message": "Credenciales incorrectas"
-}
-```
-
 ###### Respuesta <mark>500 Internal Server Error</mark>
 
 ```json
 {
-    "message": "Ocurrió un error al enviar el correo electrónico"
+    "message": "Ocurrio un error al autenticar usuario"
+}
+```
+
+```json
+{
+    "message": "Error interno del servidor"
 }
 ```
 
@@ -197,19 +197,19 @@ POST /search
 
 ```json
 {
-    "message": "Se requiere una fecha de inicio y una fecha de fin."
+    "message": "Se requiere una fecha de inicio y una fecha de fin"
 }
 ```
 
 ```json
 {
-    "message": "La fecha de inicio no puede ser mayor a la fecha de fin."
+    "message": "La fecha de inicio no puede ser mayor a la fecha de fin"
 }
 ```
 
 ```json
 {
-    "message": "La query de busqueda es necesaria."
+    "message": "La query de busqueda es necesaria"
 }
 ```
 
@@ -217,13 +217,19 @@ POST /search
 
 ```json
 {
-    "message": "Ocurrio un error al procesar la solicitud"
+    "message": "Ocurrio un error al guardar el historial"
 }
 ```
 
 ```json
 {
-    "message": "Error interno del servidor"
+    "message": "Ocurrio un error al obtener los registros"
+}
+```
+
+```json
+{
+    "message": "Ocurrio un error al procesar la solicitud"
 }
 ```
 
@@ -268,25 +274,11 @@ GET /search
 }
 ```
 
-###### Respuesta <mark>400 Bad Request</mark>
-
-```json
-{
-    "message": "Ocurrio un error al obtener el historial de búsqueda."
-}
-```
-
 ###### Respuesta<mark> 500 Internal Server Erro</mark>r
 
 ```json
 {
-    "message": "Error al obtener el historial"
-}
-```
-
-```json
-{
-    "message": "Error interno del servidor"
+    "message": "Ocurrió un error al obtener el historial de busqueda"
 }
 ```
 
@@ -334,13 +326,13 @@ POST /send
 
 ```json
 {
-    "message": "Ocurrió un error al enviar el correo electrónico."
+    "message": "El usuario no tiene un correo electrónico asociado"
 }
 ```
 
 ```json
 {
-    "message": "Error interno del servidor."
+    "message": "Ocurrió un error al enviar el correo electrónico"
 }
 ```
 

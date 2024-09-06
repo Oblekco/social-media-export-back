@@ -89,8 +89,8 @@ export const getSocialData = async (startDate: string, endDate: string, sqlQuery
 
         return formatSocialMediaData(convertToRowDataPacket(mockData))
     } catch (error) {
-        console.error('Error al obtener los datos:', error)
-        throw new Error('Error al obtener los datos')
+        console.error('Error al obtener los registros:', error)
+        throw new Error('Error al obtener los registros')
     }
 }
 
@@ -114,7 +114,7 @@ export const saveHistoryRecord = async (
         await connection.execute(query, [userId, search, isBooleanSearch ? 1 : 0, currentDate])
     } catch (error) {
         console.error('Error al guardar el historial:', error)
-        throw new Error('Error al guardar el historial')
+        throw new Error('Ocurrió un error al guardar el historial')
     }
 }
 
@@ -150,6 +150,6 @@ export const getSearchHistoryList = async (
         return rows
     } catch (error) {
         console.error('Error al obtener el historial:', error)
-        throw new Error('Error al obtener el historial')
+        throw new Error('Ocurrió un error al obtener el historial de busqueda')
     }
 }
