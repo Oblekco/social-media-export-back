@@ -8,23 +8,23 @@ export interface QueryResult {
     influencer: string
     country: string
     reach: number
-    engagement: number
+    engagement: string | number
     sentiment: string
     keyPhrases: string
     inputName: string
     twitterScreenName: string
     twitterFollowers: number
-    twitterFollowing: number
+    twitterFollowing: string | number
     state: string
     city: string
-    views: number
+    views: string | number
     likes: number
-    replies: number
+    replies: string | number
     retweets: number
-    comments: number
-    shares: number
-    reactions: number
-    threads: number
+    comments: string | number
+    shares: string | number
+    reactions: string | number
+    threads: string | number
 }
 
 export interface SearchRequestBody {

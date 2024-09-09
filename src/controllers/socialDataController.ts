@@ -3,7 +3,6 @@ import { Request, Response } from 'express'
 import { getSocialData, saveHistoryRecord, getSearchHistoryList } from '../services/socialDataService'
 import { generateExcelFile } from '../services/excelService'
 import { SearchRequestBody } from '../interfaces/export'
-import { convertBooleanQueryToSQLQuery } from '../utils/queryConverter'
 
 export const generateSocialDataFile = async (req: Request, res: Response) => {
     try {
@@ -25,9 +24,8 @@ export const generateSocialDataFile = async (req: Request, res: Response) => {
         await saveHistoryRecord(userId, booleanQuery)
 
         const unescapedQuery = decodeURIComponent(booleanQuery)
-        const sqlQuery = convertBooleanQueryToSQLQuery(unescapedQuery)
 
-        const socialData = await getSocialData(dateStart, dateEnd, sqlQuery)
+        const socialData = await getSocialData(dateStart, dateEnd, unescapedQuery)
         const filePath = await generateExcelFile(socialData)
 
         return res.status(200).json({
