@@ -1,10 +1,14 @@
 import express from 'express'
 import dotenv from 'dotenv'
+import path from 'path'
+import cron from 'node-cron'
+import { EventEmitter } from 'events'
 import authRoutes from './routes/authRoutes'
 import socialDataRoutes from './routes/socialDataRoutes'
 import sendEmailRoutes from './routes/sendEmailRoutes'
+import fileRoutes from './routes/fileRoutes'
+import { fileRemover } from './utils/fileRemover'
 
-import { EventEmitter } from 'events'
 
 EventEmitter.defaultMaxListeners = 15
 
@@ -24,12 +28,20 @@ app.use(
 
 app.use(express.json())
 
+app.use('/docs', express.static(path.join(__dirname, '../docs')))
+
 app.use('/auth', authRoutes)
 
 app.use('/search', socialDataRoutes)
 
 app.use('/send', sendEmailRoutes)
 
+app.use('/file', fileRoutes)
+
 app.listen(process.env.PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${process.env.PORT}`)
+})
+
+cron.schedule('0 0 * * *', () => {
+    fileRemover()
 })
