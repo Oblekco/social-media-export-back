@@ -20,10 +20,11 @@ export const removeSocialDataFile = async (req: Request, res: Response) => {
             return res.status(200).json({ message: 'Archivo eliminado correctamente' })
         } catch (error) {
             console.error('Error removing file:', error)
-            return res.status(500).json({ message: 'Error al eliminar el archivo' })
+            return res.status(500).json({ message: 'Ocurrió un error al intentar eliminar el archivo' })
         }
+
     } catch (error) {
         console.error('Error', error)
-        return res.status(500).json({ message: 'Ocurrió un error al intentar eliminar el archivo descargado' })
+        return res.status(500).json({ message: 'Ocurrió un error al intentar eliminar el archivo' })
     }
 }

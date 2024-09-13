@@ -338,6 +338,70 @@ POST /send
 
 ----
 
+#### 🗑 File Remove (Eliminar archivo previamente generado)
+
+```http
+DELETE /file/remove
+```
+
+| Propiedad de Cuerpo | Tipo     | Descripción                                                             |
+| ------------------- | -------- | ----------------------------------------------------------------------- |
+| `filePath`          | `String` | **Requerido**. FilePath donde se encuentra alojado el .xlsx previamente |
+
+| Propiedad de Cabecera | Tipo           | Descripción                    |
+| --------------------- | -------------- | ------------------------------ |
+| `Authorization`       | `Bearer Token` | **Requerido**. Token de sesión |
+
+###### Respuesta <mark>200 OK</mark>
+
+```json
+{
+    "message": "Archivo eliminado correctamente"
+}
+```
+
+###### Respuesta <mark>401 Unauthorized</mark>
+
+```json
+{
+    "message": "Credenciales incorrectas"
+}
+```
+
+###### Respuesta <mark>400 Bad Request</mark>
+
+```json
+{
+    "message": "Se requiere la ruta del archivo"
+}
+```
+
+###### Respuesta <mark>404 Not Found</mark>
+
+```json
+{
+    "message": "Archivo no encontrado"
+}
+```
+
+###### Respuesta <mark>500 Internal Server Error</mark>
+
+```json
+{
+    "message": "Ocurrió un error al intentar eliminar el archivo"
+}
+```
+
+---
+
+## Extras
+
+#### ⏰️ Función Cronada (Eliminación masiva de archivos)
+
+> Este proyecton dispone de una función cronada que se inicia a las 00:00 de cada día eliminando los archivos que hayan sido creado desde las 00:01 hasta las 23:00 del dia anterior.
+
+-------
+
 ## Proyecto Relacionado
 
 Este proyecto es el backend de la aplicacion **Social Media Exporter** para correr la aplicacion completa en local podes dirigirte al frontend en el siguiente enlace
