@@ -13,7 +13,7 @@ export const formatSocialMediaData = (rows: RowDataPacket[]): QueryResult[] => {
         country: row.COUNTRY || 'Mexico',
         reach: row.REDALCANCE,
         engagement: row.ENGAGEMENT || 'NO ENGAGEMENT',
-        sentiment: row.SENTIMENT,
+        sentiment: row.SENTIMENT || 'NOT RATED',
         keyPhrases: row['KEY PHRASES'],
         inputName: row['INPUT NAME'] || 'NO INPUT NAME',
         twitterScreenName: row['TWITTER SCREEN NAME'] || 'NO TWITTER SCREEN NAME',
