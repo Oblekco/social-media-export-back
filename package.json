@@ -7,7 +7,7 @@
         "start": "node dist/bundle.js",
         "dev": "nodemon --watch 'src/**/*.ts' --exec \"ts-node\" src/server.ts",
         "format": "prettier --write 'src/**/*.{js,ts,json,md}'",
-        "build": "webpack"
+        "build": "npm install && webpack"
     },
     "author": "Juan Ignacio Sterren",
     "license": "ISC",
