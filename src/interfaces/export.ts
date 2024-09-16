@@ -39,3 +39,9 @@ export interface SearchRequestBody {
     notSearches: string[]
     searchQueryType: string
 }
+
+export interface SearchHistoryRequestBody {
+    title: string
+    booleanQuery: string
+    isBooleanSearch: boolean
+}

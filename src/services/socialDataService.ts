@@ -1,6 +1,6 @@
 import { RowDataPacket } from 'mysql2'
 import dbConnection from '../config/mysql'
-import { QueryResult } from '../interfaces/export'
+import { QueryResult, SearchHistoryRequestBody } from '../interfaces/export'
 import { formatSocialMediaData } from '../utils/dataConverter'
 import { convertBooleanQueryToSQLQuery } from '../utils/queryConverter'
 
@@ -31,22 +31,23 @@ export const getSocialData = async (
 
 export const saveHistoryRecord = async (
     userId: number,
-    search: string,
-    isBooleanSearch: boolean = true
+    data: SearchHistoryRequestBody
 ): Promise<void> => {
     let connection
+
+    const { title, booleanQuery, isBooleanSearch } = data
 
     try {
         connection = await dbConnection()
 
         const query = `
-            INSERT INTO SOCIAL_MEDIA_SEARCH_HISTORY (user_id, search, is_boolean_search, date)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO SOCIAL_MEDIA_SEARCH_HISTORY (user_id, date, search, is_boolean_search, title)
+            VALUES (?, ?, ?, ?, ?)
         `
 
         const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' ')
 
-        await connection.execute(query, [userId, search, isBooleanSearch ? 1 : 0, currentDate])
+        await connection.execute(query, [userId, currentDate, booleanQuery, isBooleanSearch ? 1 : 0, title])
     } catch (error) {
         console.error('Error al guardar el historial:', error)
         throw new Error('Ocurrió un error al guardar el historial')
@@ -58,7 +59,10 @@ export const getSearchHistoryList = async (
     page: number,
     limit: number,
     order: string,
-    filter: string[]
+    filter: Record<string, string>,
+    search: Record<string, string>,
+    startDate?: string,
+    endDate?: string
 ): Promise<RowDataPacket[]> => {
     let connection
 
@@ -68,19 +72,37 @@ export const getSearchHistoryList = async (
         const validOrder = order.toUpperCase() === 'ASC' || order.toUpperCase() === 'DESC' ? order.toUpperCase() : 'ASC'
         const offset = (page - 1) * limit
 
-        const filterConditions = filter.map((term) => `search LIKE ?`).join(' AND ')
-        const filterValues = filter.map((term) => `%${term}%`)
+        const filterConditions = Object.keys(filter)
+            .map((key) => `${key} = ?`)
+            .join(' AND ')
+        const filterValues = Object.values(filter)
+
+        const searchConditions = Object.keys(search)
+            .map((key) => `${key} LIKE ?`)
+            .join(' AND ')
+        const searchValues = Object.values(search).map((value) => `%${value}%`)
+
+        const dateCondition = startDate && endDate ? `date BETWEEN ? AND ?` : ''
+        const dateValues = startDate && endDate ? [startDate, endDate] : []
+
+        const conditions = [filterConditions, searchConditions, dateCondition].filter(Boolean).join(' AND ')
 
         const query = `
-            SELECT *
-            FROM SOCIAL_MEDIA_SEARCH_HISTORY
-            WHERE user_id = ?
-            ${filterConditions ? `AND ${filterConditions}` : ''}
-            ORDER BY date ${validOrder}
+            SELECT h.*, u.fullname
+            FROM SOCIAL_MEDIA_SEARCH_HISTORY h
+            JOIN SOCIAL_MEDIA_USERS u ON h.user_id = u.id
+            WHERE h.user_id = ?
+            ${conditions ? `AND ${conditions}` : ''}
+            ORDER BY h.date ${validOrder}
             LIMIT ${limit} OFFSET ${offset}
         `
 
-        const [rows, _fields] = await connection.execute<RowDataPacket[]>(query, [userId, ...filterValues])
+        const [rows, _fields] = await connection.execute<RowDataPacket[]>(query, [
+            userId,
+            ...filterValues,
+            ...searchValues,
+            ...dateValues,
+        ])
 
         return rows
     } catch (error) {
