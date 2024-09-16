@@ -4,9 +4,10 @@
     "description": "This project is an exporter of .xlsx files",
     "main": "index.js",
     "scripts": {
-        "start": "ts-node src/index.ts",
+        "start": "node dist/bundle.js",
         "dev": "nodemon --watch 'src/**/*.ts' --exec \"ts-node\" src/server.ts",
-        "format": "prettier --write 'src/**/*.{js,ts,json,md}'"
+        "format": "prettier --write 'src/**/*.{js,ts,json,md}'",
+        "build": "webpack"
     },
     "author": "Juan Ignacio Sterren",
     "license": "ISC",
@@ -30,6 +31,10 @@
         "@types/node-cron": "^3.0.11",
         "@types/nodemailer": "^6.4.15",
         "nodemon": "^3.1.4",
-        "prettier": "^3.3.3"
+        "prettier": "^3.3.3",
+        "ts-loader": "^9.4.2",
+        "webpack": "^5.88.2",
+        "webpack-cli": "^5.1.4",
+        "webpack-node-externals": "^3.0.0"
     }
 }

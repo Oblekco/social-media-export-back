@@ -1,13 +1,11 @@
 {
     "compilerOptions": {
-      "target": "es6",
-      "module": "commonjs",
-      "outDir": "./dist",
-      "strict": true,
-      "esModuleInterop": true,
-      "types": ["express", "express-serve-static-core"]
+        "target": "es6",
+        "module": "commonjs",
+        "outDir": "./dist",
+        "strict": true,
+        "esModuleInterop": true,
+        "types": ["express", "express-serve-static-core"]
     },
-    "include": [
-      "src/**/*.ts"
-    ]
-  }
+    "include": ["src/**/*.ts"]
+}
