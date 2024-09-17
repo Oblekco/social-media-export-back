@@ -246,6 +246,8 @@ POST /search/history
 | `title`             | `String`  | **Requerido**. Título de busqueda                            |
 | `booleanQuery`      | `String`  | **Requerido**. Query booleana para realizar la busqueda      |
 | `isBooleanSearch`   | `Boolean` | **Requerido**. Específica si el tipo de busqueda es booleano |
+| `dateStart`         | `String`  | **Requerido.** Fecha de inicio para rango de busqueda.       |
+| `dateEnd`           | `String`  | **Requerido.** Fecha de fin para rango de busqueda.          |
 
 | Propiedad de Cabecera | Tipo           | Descripción                    |
 | --------------------- | -------------- | ------------------------------ |
