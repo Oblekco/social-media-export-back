@@ -304,8 +304,8 @@ GET /search/history
 | `order`            | `String`   | **Opcional**. Orden de listado en relacion al campo `date`, puede ser *ASC* o *DESC* |
 | `filter`           | `String[]` | **Opcional.** Arreglo de palabras clave para filtrado. (AND)                         |
 | `search`           | `String[]` | **Opcional.** Arreglo de palabras clave para busqueda. (AND)                         |
-| `startDate`        | `String`   | **Opcional.** Fecha de inicio para rango de busqueda.                                |
-| `endDate`          | `String`   | **Opcional.** Fecha de fin para rango de busqueda.                                   |
+| `dateStart`        | `String`   | **Opcional.** Fecha de inicio para rango de busqueda.                                |
+| `dateEnd`          | `String`   | **Opcional.** Fecha de fin para rango de busqueda.                                   |
 
 | Propiedad de Cabecera | Tipo           | Descripción                    |
 | --------------------- | -------------- | ------------------------------ |
