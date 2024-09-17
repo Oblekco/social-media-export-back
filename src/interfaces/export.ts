@@ -44,4 +44,6 @@ export interface SearchHistoryRequestBody {
     title: string
     booleanQuery: string
     isBooleanSearch: boolean
+    dateStart: string
+    dateEnd: string
 }

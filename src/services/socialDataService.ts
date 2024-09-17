@@ -5,8 +5,8 @@ import { formatSocialMediaData } from '../utils/dataConverter'
 import { convertBooleanQueryToSQLQuery } from '../utils/queryConverter'
 
 export const getSocialData = async (
-    startDate: string,
-    endDate: string,
+    dateStart: string,
+    dateEnd: string,
     queryString: string
 ): Promise<QueryResult[]> => {
     let connection
@@ -17,7 +17,7 @@ export const getSocialData = async (
         const sqlQuery = `
         SELECT *
         FROM intelica.INTELITE_ICAPSULAREDES
-        WHERE INTELITE_ICAPSULAREDES.REDFECHA BETWEEN '${startDate}' AND '${endDate}'
+        WHERE INTELITE_ICAPSULAREDES.REDFECHA BETWEEN '${dateStart}' AND '${dateEnd}'
         AND (${convertBooleanQueryToSQLQuery(queryString)})
         `
 
@@ -29,25 +29,22 @@ export const getSocialData = async (
     }
 }
 
-export const saveHistoryRecord = async (
-    userId: number,
-    data: SearchHistoryRequestBody
-): Promise<void> => {
+export const saveHistoryRecord = async (userId: number, data: SearchHistoryRequestBody): Promise<void> => {
     let connection
 
-    const { title, booleanQuery, isBooleanSearch } = data
+    const { title, booleanQuery, isBooleanSearch, dateStart, dateEnd } = data
 
     try {
         connection = await dbConnection()
 
         const query = `
-            INSERT INTO SOCIAL_MEDIA_SEARCH_HISTORY (user_id, date, search, is_boolean_search, title)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO SOCIAL_MEDIA_SEARCH_HISTORY (user_id, date, search, is_boolean_search, title, date_start, date_end)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         `
 
         const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' ')
 
-        await connection.execute(query, [userId, currentDate, booleanQuery, isBooleanSearch ? 1 : 0, title])
+        await connection.execute(query, [userId, currentDate, booleanQuery, isBooleanSearch ? 1 : 0, title, dateStart, dateEnd])
     } catch (error) {
         console.error('Error al guardar el historial:', error)
         throw new Error('Ocurrió un error al guardar el historial')
@@ -61,9 +58,9 @@ export const getSearchHistoryList = async (
     order: string,
     filter: Record<string, string>,
     search: Record<string, string>,
-    startDate?: string,
-    endDate?: string
-): Promise<{ data: RowDataPacket[], totalResults: number }> => {
+    dateStart?: string,
+    dateEnd?: string
+): Promise<{ data: RowDataPacket[]; totalResults: number }> => {
     let connection
 
     try {
@@ -82,8 +79,8 @@ export const getSearchHistoryList = async (
             .join(' AND ')
         const searchValues = Object.values(search).map((value) => `%${value}%`)
 
-        const dateCondition = startDate && endDate ? `date BETWEEN ? AND ?` : ''
-        const dateValues = startDate && endDate ? [startDate, endDate] : []
+        const dateCondition = dateStart && dateEnd ? `date BETWEEN ? AND ?` : ''
+        const dateValues = dateStart && dateEnd ? [dateStart, dateEnd] : []
 
         const conditions = [filterConditions, searchConditions, dateCondition].filter(Boolean).join(' AND ')
 

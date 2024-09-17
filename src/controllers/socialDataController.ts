@@ -36,22 +36,18 @@ export const generateSocialDataFile = async (req: Request, res: Response) => {
 }
 
 export const createSearchHistory = async (req: Request, res: Response) => {
-
     try {
         const data = req.body as SearchHistoryRequestBody
         const { id: userId } = req.user
 
-        if (!data.booleanQuery)
-            return res.status(400).json({ message: 'Se requiere una query de busqueda' })
+        if (!data.booleanQuery) return res.status(400).json({ message: 'Se requiere una query de busqueda' })
 
-        if (!data.title)
-            return res.status(400).json({ message: 'Se requiere un título para el historial de búsqueda' })
+        if (!data.title) return res.status(400).json({ message: 'Se requiere un título para el historial de búsqueda' })
 
         await saveHistoryRecord(userId, data)
 
         return res.status(201).json({ message: 'Historial de búsqueda guardado correctamente' })
-    }
-    catch (error) {
+    } catch (error) {
         console.error('Error', error)
         return res.status(500).json({ message: 'Ocurrió un error al procesar la solicitud' })
     }
@@ -60,7 +56,7 @@ export const createSearchHistory = async (req: Request, res: Response) => {
 export const listSearchHistory = async (req: Request, res: Response) => {
     try {
         const { id: userId } = req.user
-        const { page = 1, limit = 10, order = 'ASC', filter = {}, search = {}, startDate, endDate } = req.query
+        const { page = 1, limit = 10, order = 'ASC', filter = {}, search = {}, dateStart, dateEnd } = req.query
 
         const parsedFilter = typeof filter === 'string' ? JSON.parse(filter) : filter
         const parsedSearch = typeof search === 'string' ? JSON.parse(search) : search
@@ -72,8 +68,8 @@ export const listSearchHistory = async (req: Request, res: Response) => {
             order as string,
             parsedFilter as Record<string, string>,
             parsedSearch as Record<string, string>,
-            startDate as string,
-            endDate as string
+            dateStart as string,
+            dateEnd as string
         )
 
         res.status(200).json({
