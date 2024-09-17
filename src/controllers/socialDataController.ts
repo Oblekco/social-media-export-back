@@ -65,7 +65,7 @@ export const listSearchHistory = async (req: Request, res: Response) => {
         const parsedFilter = typeof filter === 'string' ? JSON.parse(filter) : filter
         const parsedSearch = typeof search === 'string' ? JSON.parse(search) : search
 
-        const searchHistory = await getSearchHistoryList(
+        const { data, totalResults } = await getSearchHistoryList(
             userId,
             Number(page),
             Number(limit),
@@ -76,7 +76,10 @@ export const listSearchHistory = async (req: Request, res: Response) => {
             endDate as string
         )
 
-        res.status(200).json(searchHistory)
+        res.status(200).json({
+            data,
+            totalResults,
+        })
     } catch (error) {
         console.error('Error en el controlador:', error)
         res.status(500).json({ message: 'Ocurrió un error al obtener el historial de búsqueda' })

@@ -63,7 +63,7 @@ export const getSearchHistoryList = async (
     search: Record<string, string>,
     startDate?: string,
     endDate?: string
-): Promise<RowDataPacket[]> => {
+): Promise<{ data: RowDataPacket[], totalResults: number }> => {
     let connection
 
     try {
@@ -87,7 +87,8 @@ export const getSearchHistoryList = async (
 
         const conditions = [filterConditions, searchConditions, dateCondition].filter(Boolean).join(' AND ')
 
-        const query = `
+        // Consulta para obtener los datos paginados
+        const dataQuery = `
             SELECT h.*, u.fullname
             FROM SOCIAL_MEDIA_SEARCH_HISTORY h
             JOIN SOCIAL_MEDIA_USERS u ON h.user_id = u.id
@@ -97,16 +98,34 @@ export const getSearchHistoryList = async (
             LIMIT ${limit} OFFSET ${offset}
         `
 
-        const [rows, _fields] = await connection.execute<RowDataPacket[]>(query, [
+        // Consulta para obtener el total de resultados
+        const totalQuery = `
+            SELECT COUNT(*) as total
+            FROM SOCIAL_MEDIA_SEARCH_HISTORY h
+            JOIN SOCIAL_MEDIA_USERS u ON h.user_id = u.id
+            WHERE h.user_id = ?
+            ${conditions ? `AND ${conditions}` : ''}
+        `
+
+        const [dataRows] = await connection.execute<RowDataPacket[]>(dataQuery, [
             userId,
             ...filterValues,
             ...searchValues,
             ...dateValues,
         ])
 
-        return rows
+        const [totalRows] = await connection.execute<RowDataPacket[]>(totalQuery, [
+            userId,
+            ...filterValues,
+            ...searchValues,
+            ...dateValues,
+        ])
+
+        const totalResults = totalRows[0]?.total || 0
+
+        return { data: dataRows, totalResults }
     } catch (error) {
         console.error('Error al obtener el historial:', error)
-        throw new Error('Ocurrió un error al obtener el historial de busqueda')
+        throw new Error('Ocurrió un error al obtener el historial de búsqueda')
     }
 }
