@@ -285,7 +285,7 @@ POST /search/history
 
 ```json
 {
-    "message": "Ocurrió un error al obtener el historial de busqueda"
+    "message": "Ocurrió un error al procesar la solicitud"
 }
 ```
 
@@ -330,7 +330,7 @@ GET /search/history
 }
 ```
 
-###### Respuesta 401 Unauthorized
+###### Respuesta <mark>401 Unauthorized</mark>
 
 ```json
 {
@@ -338,7 +338,7 @@ GET /search/history
 }
 ```
 
-###### Respuesta 500 Internal Server Error
+###### Respuesta <mark>500 Internal Server Error</mark>
 
 ```json
 {
