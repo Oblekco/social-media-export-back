@@ -126,3 +126,25 @@ export const getSearchHistoryList = async (
         throw new Error('Ocurrió un error al obtener el historial de búsqueda')
     }
 }
+
+export const getSearchHistoryById = async (id: number): Promise<RowDataPacket | null> => {
+    let connection;
+
+    try {
+        connection = await dbConnection()
+
+        const query = `
+            SELECT h.*, u.fullname
+            FROM SOCIAL_MEDIA_SEARCH_HISTORY h
+            JOIN SOCIAL_MEDIA_USERS u ON h.user_id = u.id
+            WHERE h.id = ?
+        `
+
+        const [rows] = await connection.execute<RowDataPacket[]>(query, [id])
+        
+        return rows.length > 0 ? rows[0] : null
+    } catch (error) {
+        console.error('Error al obtener la búsqueda en el historial por id:', error)
+        throw new Error('Ocurrió un error al obtener la búsqueda en el historial por id')
+    }
+};

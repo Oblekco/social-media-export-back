@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 
-import { getSocialData, saveHistoryRecord, getSearchHistoryList } from '../services/socialDataService'
+import { getSocialData, saveHistoryRecord, getSearchHistoryList, getSearchHistoryById } from '../services/socialDataService'
 import { generateExcelFile } from '../services/excelService'
 import { SearchRequestBody, SearchHistoryRequestBody } from '../interfaces/export'
 
@@ -81,3 +81,24 @@ export const listSearchHistory = async (req: Request, res: Response) => {
         res.status(500).json({ message: 'Ocurrió un error al obtener el historial de búsqueda' })
     }
 }
+
+export const getASingleSearchHistory = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params
+        
+        if (!id) {
+            return res.status(400).json({ message: 'El parámetro id es requerido' })
+        }
+
+        const searchHistory = await getSearchHistoryById(Number(id))
+
+        if (!searchHistory) {
+            return res.status(404).json({ message: 'No se encontró el historial de búsqueda con ese id' })
+        }
+
+        return res.status(200).json(searchHistory)
+    } catch (error) {
+        console.error('Error al obtener el historial de búsqueda por id:', error);
+        return res.status(500).json({ message: 'Ocurrió un error al obtener el historial de búsqueda' })
+    }
+};
