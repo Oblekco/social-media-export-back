@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs'
 import path from 'path'
 
-const docsPath = path.join(__dirname, '../../docs')
+const docsPath = process.env.DOCS_PATH || path.join(__dirname, '../../docs');
 
 export const fileRemover = async (): Promise<void> => {
     try {
