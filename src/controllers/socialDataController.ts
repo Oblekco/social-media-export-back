@@ -20,9 +20,8 @@ export const generateSocialDataFile = async (req: Request, res: Response) => {
             return res.status(400).json({ message: 'La query de busqueda es necesaria' })
         }
 
-        const unescapedQuery = decodeURIComponent(booleanQuery)
+        const socialData = await getSocialData(dateStart, dateEnd, booleanQuery)
 
-        const socialData = await getSocialData(dateStart, dateEnd, unescapedQuery)
         const filePath = await generateExcelFile(socialData)
 
         return res.status(200).json({

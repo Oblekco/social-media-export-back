@@ -4,29 +4,42 @@ export const convertBooleanQueryToSQLQuery = (booleanQuery: string): string => {
     let formattedConditions: string[] = []
     let currentOperator = ''
 
-    conditions.forEach((condition) => {
+    conditions.forEach((condition, index) => {
         if (condition === 'AND' || condition === 'OR' || condition === 'NOT') {
             currentOperator = condition
-        } else {
+        } else if (condition.trim() !== '') {
+            const escapeSQL = (str: string): string => str.replace(/'/g, "''")
+
             let formattedCondition = ''
             if (condition.startsWith('to:')) {
-                const keyword = condition.substring(3)
+                const keyword = escapeSQL(condition.substring(3))
                 formattedCondition = `REDCONTENIDO LIKE '%${keyword}%'`
             } else if (condition.startsWith('from:')) {
-                const keyword = condition.substring(5)
+                const keyword = escapeSQL(condition.substring(5))
                 formattedCondition = `REDNOMBRE LIKE '%${keyword}%'`
             } else {
-                formattedCondition = `(REDCONTENIDO LIKE '%${condition}%' OR REDNOMBRE LIKE '%${condition}%')`
+                const keyword = escapeSQL(condition)
+                formattedCondition = `(REDCONTENIDO LIKE '%${keyword}%' OR REDNOMBRE LIKE '%${keyword}%')`
             }
 
+            // Agregar el operador anterior si existe
             if (currentOperator) {
-                formattedConditions.push(`${currentOperator} ${formattedCondition}`)
+                if (currentOperator === 'NOT') {
+                    formattedConditions.push(`${currentOperator} (${formattedCondition})`)
+                } else {
+                    formattedConditions.push(`${currentOperator} ${formattedCondition}`)
+                }
                 currentOperator = ''
             } else {
                 formattedConditions.push(formattedCondition)
             }
+        } else if (index === 0 || index === conditions.length - 1) {
+
+        } else {
+            throw new Error('Formato inválido: operadores consecutivos o condición vacía.')
         }
     })
 
+    // Unir todas las condiciones
     return formattedConditions.join(' ')
 }
