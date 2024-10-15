@@ -22,7 +22,6 @@ export const convertBooleanQueryToSQLQuery = (booleanQuery: string): string => {
                 formattedCondition = `(REDCONTENIDO LIKE '%${keyword}%' OR REDNOMBRE LIKE '%${keyword}%')`
             }
 
-            // Agregar el operador anterior si existe
             if (currentOperator) {
                 if (currentOperator === 'NOT') {
                     formattedConditions.push(`${currentOperator} (${formattedCondition})`)
@@ -40,6 +39,5 @@ export const convertBooleanQueryToSQLQuery = (booleanQuery: string): string => {
         }
     })
 
-    // Unir todas las condiciones
     return formattedConditions.join(' ')
 }

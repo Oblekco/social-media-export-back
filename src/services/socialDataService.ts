@@ -84,7 +84,6 @@ export const getSearchHistoryList = async (
 
         const conditions = [filterConditions, searchConditions, dateCondition].filter(Boolean).join(' AND ')
 
-        // Consulta para obtener los datos paginados
         const dataQuery = `
             SELECT h.*, u.fullname
             FROM SOCIAL_MEDIA_SEARCH_HISTORY h
@@ -95,7 +94,6 @@ export const getSearchHistoryList = async (
             LIMIT ${limit} OFFSET ${offset}
         `
 
-        // Consulta para obtener el total de resultados
         const totalQuery = `
             SELECT COUNT(*) as total
             FROM SOCIAL_MEDIA_SEARCH_HISTORY h
