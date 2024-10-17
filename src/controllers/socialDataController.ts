@@ -8,19 +8,19 @@ export const generateSocialDataFile = async (req: Request, res: Response) => {
     try {
         const { dateStart, dateEnd, booleanQuery } = req.body as SearchRequestBody
 
-        if (!dateStart || !dateEnd) {
+        if (!dateStart || !dateEnd)
             return res.status(400).json({ message: 'Se requiere una fecha de inicio y una fecha de fin' })
-        }
 
-        if (dateStart > dateEnd) {
+        if (dateStart > dateEnd)
             return res.status(400).json({ message: 'La fecha de inicio no puede ser mayor a la fecha de fin' })
-        }
 
-        if (!booleanQuery.length) {
+        if (!booleanQuery.length)
             return res.status(400).json({ message: 'La query de busqueda es necesaria' })
-        }
 
         const socialData = await getSocialData(dateStart, dateEnd, booleanQuery)
+
+        if (!socialData.length)
+            return res.status(404).json({ message: 'No se encontraron datos para las fechas seleccionadas' })
 
         const filePath = await generateExcelFile(socialData)
 
